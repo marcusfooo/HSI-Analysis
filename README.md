@@ -18,7 +18,7 @@ Logistic Regression is the finalised model on the sole basis of cross-validation
 
 The yahoo.py file contains an API call to Yahoo’s API to fetch real-time data for HSI, to be used as an input for main.py
 
-## Key Flaws:
+## main.py Flaws:
 
 1. Inefficient use of data (Only the ‘Open’, ‘High’, ‘Low’ data were put to use as input factors)
 
@@ -37,7 +37,7 @@ Both a picture of the performance of the model on recent data, and present data 
 
 The LSTM model is saved within the .h5 file
 
-## Key Flaws:
+## lstm.py Flaws:
 
 1. Too little training samples(4000+) may limit the practical implementation of neural network
 
