@@ -7,7 +7,7 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from yahoo import fetch_yahoo
 
 import warnings
-
+from time import sleep
 warnings.filterwarnings('ignore')
 
 # reading the data
@@ -64,5 +64,5 @@ def predict():
 
 
 predict()
-
+sleep(3)
 
