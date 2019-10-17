@@ -14,7 +14,7 @@ epochs = 5
 batch_size = 32
 
 # Opening data file
-df = pd.read_csv('HSI.csv')
+df = pd.read_csv('HSI_171019.csv')
 df.dropna(inplace=True)
 
 # Code used to generate training and test model
@@ -108,13 +108,21 @@ def model_testing():
 
 # Actual execution of predictive model
 def actual_testing():
-    data_actual_array = df.iloc[4200:4387, :].values
+    data_actual_array = df.iloc[0:245, :].values
+    actual_plot_array = df.iloc[120:245, :].values
     data_actual = pd.DataFrame(index=range(0, len(data_actual_array)), columns=['Date', 'Close'])
+    actual_plot = pd.DataFrame(index=range(0, len(actual_plot_array)), columns=['Date', 'Close'])
     for i in range(0, len(data_actual)):
         data_actual['Date'][i] = data_actual_array[i, 0]
         data_actual['Close'][i] = data_actual_array[i, 5]
+    for i in range(0, len(actual_plot)):
+        actual_plot['Date'][i] = actual_plot_array[i, 0]
+        actual_plot['Close'][i] = actual_plot_array[i, 5]
     data_actual.index = data_actual.Date
     data_actual.drop('Date', axis=1, inplace=True)
+    actual_plot.index = actual_plot.Date
+    actual_plot.drop('Date', axis=1, inplace=True)
+    actual_plot = np.array(actual_plot)
 
     # Scale Closing prices to between values 0,1
     scaler = MinMaxScaler(feature_range=(0, 1))
@@ -134,8 +142,9 @@ def actual_testing():
 
     # Visual Plot of Prediction
     plt.figure(figsize=(10, 6))
+    plt.plot(actual_plot, color='blue', label='Actual HSI Price')
     plt.plot(predictions, color='red', label='Predicted HSI Price')
-    plt.axvline(x=120, color='blue', linestyle='dashed', label='Present')
+    plt.axvline(x=125, color='green', linestyle='dashed', label='Present')
     plt.title('HSI Price Prediction')
     plt.xlabel('Date')
     plt.ylabel('HSI Price')
