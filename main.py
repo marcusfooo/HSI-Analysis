@@ -8,6 +8,8 @@ from yahoo import fetch_yahoo
 
 import warnings
 from time import sleep
+
+
 warnings.filterwarnings('ignore')
 
 # reading the data
@@ -47,7 +49,6 @@ def train_accuracy():
 
 
 def predict():
-
     new_x = fetch_yahoo()
     data_x = pd.DataFrame(data=new_x)
     data_x.set_index('Open', inplace=True)
@@ -62,7 +63,7 @@ def predict():
         prediction_str = 'FALL'
     print('HSI is expected to %s today!' % prediction_str)
 
-
 predict()
 sleep(3)
+
 

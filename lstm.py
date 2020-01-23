@@ -3,8 +3,10 @@ from sklearn.preprocessing import MinMaxScaler
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, LSTM
 import numpy as np
-import matplotlib.pyplot as plt
 import pandas as pd
+
+import matplotlib.pyplot as plt
+
 from time import sleep
 
 # Model Parameters
@@ -23,33 +25,32 @@ def model_generation():
     data_train_array = df.iloc[0:3900, :].values
     data_test_array = df.iloc[3900:4387, :].values
 
-    # Creating test and training dataframes from np arrays
-    data_train = pd.DataFrame(index=range(0,len(data_train_array)),columns=['Date', 'Close'])
-    data_test = pd.DataFrame(index=range(0,len(data_test_array)),columns=['Date', 'Close'])
+    # Creating empty test and training dataframes from length of arrays - Date and Close columns
+    data_train = pd.DataFrame(index=range(0,len(data_train_array)), columns=['Date', 'Close'])
+    data_test = pd.DataFrame(index=range(0,len(data_test_array)), columns=['Date', 'Close'])
 
-
-    for i in range(0,len(data_train)):
+    # Fill empty training dataframe with array values
+    for i in range(0, len(data_train)):
         data_train['Date'][i] = data_train_array[i, 0]
         data_train['Close'][i] = data_train_array[i, 5]
     data_train.index = data_train.Date
     data_train.drop('Date', axis=1, inplace=True)
 
-
+    # Fill empty test dataframe with array values
     for i in range (0, len(data_test)):
         data_test['Date'][i] = data_test_array[i, 0]
         data_test['Close'][i] = data_test_array[i, 5]
     data_test.index = data_test.Date
     data_test.drop('Date', axis=1, inplace=True)
 
-
-    # Scale Closing prices to between values 0,1
+    # Scale/ Normalise Closing prices to between values 0 and 1
     scaler = MinMaxScaler(feature_range=(0, 1))
     scaled_data_train = scaler.fit_transform(data_train)
     scaled_data_test = scaler.fit_transform(data_test)
 
     # Shaping training inputs and labels using past 60 day data
     x_train, y_train = [], []
-    for i in range(days,len(scaled_data_train)):
+    for i in range(days, len(scaled_data_train)):
         x_train.append(scaled_data_train[i-days:i,0])
         y_train.append(scaled_data_train[i,0])
     x_train, y_train = np.array(x_train), np.array(y_train)
@@ -112,6 +113,8 @@ def actual_testing():
     actual_plot_array = df.iloc[120:245, :].values
     data_actual = pd.DataFrame(index=range(0, len(data_actual_array)), columns=['Date', 'Close'])
     actual_plot = pd.DataFrame(index=range(0, len(actual_plot_array)), columns=['Date', 'Close'])
+
+
     for i in range(0, len(data_actual)):
         data_actual['Date'][i] = data_actual_array[i, 0]
         data_actual['Close'][i] = data_actual_array[i, 5]
@@ -138,6 +141,8 @@ def actual_testing():
     from keras.models import load_model
     model = load_model('my_model.h5')
     predictions = model.predict(x_actual)
+
+    # Inverse transform to original magnitude
     predictions = scaler.inverse_transform(predictions)
 
     # Visual Plot of Prediction
